@@ -27,14 +27,15 @@ public class Switch {
     public void transmit(Package pack, Host caller) {
         addressTable.put(pack.originMac, caller);
 
-        if (addressTable.containsKey(pack.destinationMac) && (!pack.destinationMac.equals("FF:FF:FF:FF")))
+        if (addressTable.containsKey(pack.destinationMac))
             addressTable.get(pack.destinationMac).receiveMessage(pack);
-        else broadcast(pack);
+        else broadcast(pack, caller);
     }
 
-    private void broadcast(Package pack) {
+    private void broadcast(Package pack, Host caller) {
         for (Host h : hosts) {
-            h.receiveMessage(pack);
+            if (h != caller)
+                h.receiveMessage(pack);
         }
     }
 }

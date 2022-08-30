@@ -5,7 +5,6 @@ public class Main {
         Host h2 = new Host("h2", "10.15.20.2", switch1);
         Host h3 = new Host("h3", "10.15.20.3", switch1);
         Host h4 = new Host("h4", "10.15.20.4", switch1);
-        Host h5 = new Host("h5", "10.15.20.5", switch1);
         h1.sendPackage(h2.getIpAddress(), "hello");
     }
 }
