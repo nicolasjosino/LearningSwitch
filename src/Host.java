@@ -11,11 +11,10 @@ public class Host {
         this.macAddress = macAddress;
         this.ipAddress = ipAddress;
         this.addressTable = new HashMap<>();
-//        connectedSwitch.getHosts().add(this);
-    }
-
-    public String getMacAddress() {
-        return macAddress;
+        if (connectedSwitch.getHosts().size() < connectedSwitch.getPortsQuantity()) {
+            this.connectedSwitch = connectedSwitch;
+            connectedSwitch.getHosts().add(this);
+        }
     }
 
     public String getIpAddress() {
@@ -27,22 +26,22 @@ public class Host {
     }
 
     public void sendPackage(String destinationIp, String message) {
-        // checar quem será chave e quem será valor (IP MUDA)
         var destinationMac = addressTable.get(destinationIp);
 
-        if (destinationMac.isEmpty()) {
+        if (destinationMac == null) {
             destinationMac = "FF:FF:FF:FF";
         }
         var pack = new Package(message, this.macAddress, destinationMac, this.ipAddress, destinationIp);
 
-//        sw.transmit(pack);
+        connectedSwitch.transmit(pack, this);
     }
 
     public void receiveMessage(Package pack) {
         addressTable.put(pack.originIp, pack.originMac);
 
-        if ((Objects.equals(pack.destinationIp, this.ipAddress)) && (Objects.equals(pack.destinationMac, this.macAddress))) {
-            //ENVIAR RESPOSTA (ARP REPLY)
+        if ((Objects.equals(pack.destinationIp, this.ipAddress)) ||
+                (Objects.equals(pack.destinationMac, this.macAddress))) {
+//            sendPackage(pack.originIp, "Received");
             System.out.println(pack.payload);
         }
     }
