@@ -1,5 +1,4 @@
 import java.util.HashMap;
-import java.util.Objects;
 
 public class Host {
     private final String macAddress;
@@ -20,11 +19,11 @@ public class Host {
     private void printPackage(Package pack) {
         System.out.println("+-------------------+");
         System.out.println("| Pacote");
-        System.out.println("| Payload: "+pack.payload);
-        System.out.println("| OM: "+pack.originMac);
-        System.out.println("| DM: "+pack.destinationMac);
-        System.out.println("| OI: "+pack.originIp);
-        System.out.println("| DI: "+pack.destinationIp);
+        System.out.println("| Payload: " + pack.payload);
+        System.out.println("| OM: " + pack.originMac);
+        System.out.println("| DM: " + pack.destinationMac);
+        System.out.println("| OI: " + pack.originIp);
+        System.out.println("| DI: " + pack.destinationIp);
         System.out.println("+-------------------+ \n");
     }
 
@@ -44,28 +43,27 @@ public class Host {
             var arpPack = new Package("REQUEST", this.macAddress, arpBroadcast, this.ipAddress, destinationIp);
             printPackage(arpPack);
             connectedSwitch.transmit(arpPack, this);
-        }
-        else {
+        } else {
             var pack = new Package(message, this.macAddress, destinationMac, this.ipAddress, destinationIp);
             printPackage(pack);
             connectedSwitch.transmit(pack, this);
-            originalPayload = null;   
+            originalPayload = null;
         }
     }
 
     public void receiveMessage(Package pack) {
         addressTable.put(pack.originIp, pack.originMac);
 
-        if ((Objects.equals(pack.destinationIp, this.ipAddress))) {
-            if (pack.destinationMac == this.macAddress)
+        if ((pack.destinationIp.equals(this.ipAddress))) {
+            if (pack.destinationMac.equals(this.macAddress)) {
+                System.out.println("Package received by intended Host!");
                 System.out.println(pack.payload);
-            else if (pack.destinationMac == arpBroadcast){
-                if (pack.payload == "REQUEST"){
+            } else if (pack.destinationMac.equals(arpBroadcast)) {
+                if (pack.payload.equals("REQUEST")) {
                     Package arpReply = new Package("REPLY", this.macAddress, arpBroadcast, this.ipAddress, pack.originIp);
                     printPackage(arpReply);
                     connectedSwitch.transmit(arpReply, this);
-                }
-                else if (pack.payload == "REPLY") {
+                } else if (pack.payload.equals("REPLY")) {
                     sendPackage(pack.originIp, originalPayload);
                 }
             }

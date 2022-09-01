@@ -26,9 +26,10 @@ public class Switch {
 
     public void transmit(Package pack, Host caller) {
         addressTable.put(pack.originMac, caller);
+        var destinationHost = addressTable.get(pack.destinationMac);
 
-        if (addressTable.containsKey(pack.destinationMac))
-            addressTable.get(pack.destinationMac).receiveMessage(pack);
+        if (destinationHost != null)
+            destinationHost.receiveMessage(pack);
         else broadcast(pack, caller);
     }
 
