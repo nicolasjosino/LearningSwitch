@@ -3,17 +3,16 @@ import java.util.HashMap;
 public class Host {
     private final String macAddress;
     private String ipAddress;
-    private Switch connectedSwitch;
+    private final Port port;
     private final HashMap<String, String> addressTable;
     private final String arpBroadcast = "FF:FF:FF:FF";
     private String originalPayload;
 
-    public Host(String macAddress, String ipAddress, Switch connectedSwitch) {
+    public Host(String macAddress, String ipAddress) {
         this.macAddress = macAddress;
         this.ipAddress = ipAddress;
         this.addressTable = new HashMap<>();
-        this.connectedSwitch = connectedSwitch;
-        connectedSwitch.getHosts().add(this);
+        this.port = new Port();
     }
 
     private void printPackage(Packet pack) {
@@ -42,11 +41,12 @@ public class Host {
             originalPayload = message;
             var arpPack = new Packet("REQUEST", this.macAddress, arpBroadcast, this.ipAddress, destinationIp);
             printPackage(arpPack);
-            connectedSwitch.transmit(arpPack, this);
+            port.send(arpPack);
+            // connectedSwitch.transmit(arpPack, this);
         } else {
             var pack = new Packet(message, this.macAddress, destinationMac, this.ipAddress, destinationIp);
             printPackage(pack);
-            connectedSwitch.transmit(pack, this);
+            // connectedSwitch.transmit(pack, this);
             originalPayload = null;
         }
     }
@@ -62,7 +62,7 @@ public class Host {
                 if (pack.payload.equals("REQUEST")) {
                     Packet arpReply = new Packet("REPLY", this.macAddress, arpBroadcast, this.ipAddress, pack.originIp);
                     printPackage(arpReply);
-                    connectedSwitch.transmit(arpReply, this);
+                    // connectedSwitch.transmit(arpReply, this);
                 } else if (pack.payload.equals("REPLY")) {
                     sendPackage(pack.originIp, originalPayload);
                 }

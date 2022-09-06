@@ -2,17 +2,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Switch {
-    private final HashMap<String, Host> addressTable;
+    private final HashMap<String, Port> addressTable;
     private final Integer portsQuantity;
-    private final ArrayList<Host> hosts;
+    private final ArrayList<Port> ports;
 
     public Switch(Integer portsQuantity) {
         this.addressTable = new HashMap<>();
         this.portsQuantity = portsQuantity;
-        this.hosts = new ArrayList<>(portsQuantity);
+        this.ports = new ArrayList<>(portsQuantity);
     }
 
-    public HashMap<String, Host> getAddressTable() {
+    public HashMap<String, Port> getAddressTable() {
         return addressTable;
     }
 
@@ -20,23 +20,23 @@ public class Switch {
         return portsQuantity;
     }
 
-    public ArrayList<Host> getHosts() {
-        return hosts;
+    public ArrayList<Port> getPorts() {
+        return ports;
     }
 
-    public void transmit(Packet pack, Host caller) {
+    public void transmit(Packet pack, Port caller) {
         addressTable.put(pack.originMac, caller);
-        var destinationHost = addressTable.get(pack.destinationMac);
+        var destination = addressTable.get(pack.destinationMac);
 
-        if (destinationHost != null)
-            destinationHost.receiveMessage(pack);
+        if (destination != null)
+            destination.send(pack);
         else broadcast(pack, caller);
     }
 
-    private void broadcast(Packet pack, Host caller) {
-        for (Host h : hosts) {
-            if (h != caller)
-                h.receiveMessage(pack);
+    private void broadcast(Packet pack, Port caller) {
+        for (Port p : ports) {
+            if (p != caller)
+                p.send(pack);
         }
     }
 }
