@@ -24,7 +24,7 @@ public class Switch {
         return hosts;
     }
 
-    public void transmit(Package pack, Host caller) {
+    public void transmit(Packet pack, Host caller) {
         addressTable.put(pack.originMac, caller);
         var destinationHost = addressTable.get(pack.destinationMac);
 
@@ -33,7 +33,7 @@ public class Switch {
         else broadcast(pack, caller);
     }
 
-    private void broadcast(Package pack, Host caller) {
+    private void broadcast(Packet pack, Host caller) {
         for (Host h : hosts) {
             if (h != caller)
                 h.receiveMessage(pack);

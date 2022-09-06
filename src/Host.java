@@ -16,7 +16,7 @@ public class Host {
         connectedSwitch.getHosts().add(this);
     }
 
-    private void printPackage(Package pack) {
+    private void printPackage(Packet pack) {
         System.out.println("+-------------------+");
         System.out.println("| Pacote");
         System.out.println("| Payload: " + pack.payload);
@@ -40,18 +40,18 @@ public class Host {
 
         if (destinationMac == null) {
             originalPayload = message;
-            var arpPack = new Package("REQUEST", this.macAddress, arpBroadcast, this.ipAddress, destinationIp);
+            var arpPack = new Packet("REQUEST", this.macAddress, arpBroadcast, this.ipAddress, destinationIp);
             printPackage(arpPack);
             connectedSwitch.transmit(arpPack, this);
         } else {
-            var pack = new Package(message, this.macAddress, destinationMac, this.ipAddress, destinationIp);
+            var pack = new Packet(message, this.macAddress, destinationMac, this.ipAddress, destinationIp);
             printPackage(pack);
             connectedSwitch.transmit(pack, this);
             originalPayload = null;
         }
     }
 
-    public void receiveMessage(Package pack) {
+    public void receiveMessage(Packet pack) {
         addressTable.put(pack.originIp, pack.originMac);
 
         if ((pack.destinationIp.equals(this.ipAddress))) {
@@ -60,7 +60,7 @@ public class Host {
                 System.out.println(pack.payload);
             } else if (pack.destinationMac.equals(arpBroadcast)) {
                 if (pack.payload.equals("REQUEST")) {
-                    Package arpReply = new Package("REPLY", this.macAddress, arpBroadcast, this.ipAddress, pack.originIp);
+                    Packet arpReply = new Packet("REPLY", this.macAddress, arpBroadcast, this.ipAddress, pack.originIp);
                     printPackage(arpReply);
                     connectedSwitch.transmit(arpReply, this);
                 } else if (pack.payload.equals("REPLY")) {
