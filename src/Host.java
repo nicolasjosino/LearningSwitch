@@ -1,6 +1,6 @@
 import java.util.HashMap;
 
-public class Host {
+public class Host extends Thread {
     private final String macAddress;
     private String ipAddress;
     private final Port port;
@@ -13,6 +13,17 @@ public class Host {
         this.ipAddress = ipAddress;
         this.addressTable = new HashMap<>();
         this.port = new Port();
+        start();
+    }
+
+    @Override
+    public void run() {
+        while (true) {
+            
+            if (!port.getReceived().isEmpty()) {
+                receiveMessage(port.getReceived().getFirst());    
+            }
+        }
     }
 
     private void printPackage(Packet pack) {
@@ -32,6 +43,12 @@ public class Host {
 
     public void setIpAddress(String ipAddress) {
         this.ipAddress = ipAddress;
+    }
+
+    public Port getPort() {
+        // Quando tentamos criar outra porta no this.Host
+        // a porta fica conectada em 2 portas ao mesmo tempo
+        return port;
     }
 
     public void sendPackage(String destinationIp, String message) {

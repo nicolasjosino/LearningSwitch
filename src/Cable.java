@@ -9,8 +9,8 @@ public class Cable {
 
     public void transfer(Packet pack, Port sender) {
         if (sender == portA)
-            portB.recv();
+            portB.recv(pack);
         else
-            portA.recv();
+            portA.recv(pack);
     }
 }

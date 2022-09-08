@@ -2,20 +2,26 @@ import java.util.LinkedList;
 
 public class Port {
     private Cable cable;
-    LinkedList<Packet> received;
-    LinkedList<Packet> sendList;
+    private LinkedList<Packet> received;
+    private LinkedList<Packet> sendList;
+    private boolean connected;
 
     public Port() {
         this.cable = null;
         this.received = new LinkedList<>(); 
         this.sendList = new LinkedList<>();
+        this.connected = false;
     }
 
     public Cable getCable() {
         return this.cable;
     }
 
-    public void setCable(Cable cable) {
+    public void setCable(Port port) {
+        // if (port == null) {
+        //     Exceção para tentativa de conexão com porta inexistente
+        // }
+        var cable = new Cable(this, port);
         this.cable = cable;
     }
 
@@ -23,8 +29,16 @@ public class Port {
         return this.received;
     }
 
-    public LinkedList<Packet> getSent() {
+    public LinkedList<Packet> getSendList() {
         return this.sendList;
+    }
+
+    public boolean isConnected() {
+        return this.connected;
+    }
+
+    public void connect() {
+        this.connected = true;
     }
 
     public void send(Packet pack) {
