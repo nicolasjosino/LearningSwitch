@@ -21,7 +21,8 @@ public class Host extends Thread {
         while (true) {
             
             if (!port.getReceived().isEmpty()) {
-                receiveMessage(port.getReceived().getFirst());    
+                receiveMessage(port.getReceived().getFirst());  
+                port.getReceived().removeFirst();  
             }
         }
     }
@@ -79,7 +80,7 @@ public class Host extends Thread {
                 if (pack.payload.equals("REQUEST")) {
                     Packet arpReply = new Packet("REPLY", this.macAddress, arpBroadcast, this.ipAddress, pack.originIp);
                     printPackage(arpReply);
-                    // connectedSwitch.transmit(arpReply, this);
+                    port.send(arpReply);
                 } else if (pack.payload.equals("REPLY")) {
                     sendPackage(pack.originIp, originalPayload);
                 }

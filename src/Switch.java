@@ -9,7 +9,9 @@ public class Switch extends Thread {
     public Switch(Integer portsQuantity) {
         this.addressTable = new HashMap<>();
         this.portsQuantity = portsQuantity;
+        this.ports = new ArrayList<>();
         setPorts(this.portsQuantity);
+        start();
     }
 
     private void setPorts(Integer numbersPorts) {
@@ -46,7 +48,8 @@ public class Switch extends Thread {
         while (true) {
             for (Port p : ports) {
                 if (!p.getReceived().isEmpty()) {
-                    transmit(p.getReceived().getFirst(), p);    
+                    transmit(p.getReceived().getFirst(), p);
+                    p.getReceived().removeFirst();
                 }
             }
         }
@@ -63,7 +66,7 @@ public class Switch extends Thread {
 
     private void broadcast(Packet pack, Port caller) {
         for (Port p : ports) {
-            if (p != caller)
+            if ((p != caller) && (p.isConnected()))
                 p.send(pack);
         }
     }

@@ -17,11 +17,7 @@ public class Port {
         return this.cable;
     }
 
-    public void setCable(Port port) {
-        // if (port == null) {
-        //     Exceção para tentativa de conexão com porta inexistente
-        // }
-        var cable = new Cable(this, port);
+    public void setCable(Cable cable) {
         this.cable = cable;
     }
 
@@ -45,6 +41,7 @@ public class Port {
         sendList.add(pack);
         for (Packet packet : sendList) {
             cable.transfer(packet, this);
+            sendList.removeFirst();
         }
     }
 
