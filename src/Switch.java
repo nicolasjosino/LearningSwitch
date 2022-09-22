@@ -15,17 +15,17 @@ public class Switch extends Thread {
     }
 
     private void setPorts(Integer numbersPorts) {
-        for (int i = 0; i < numbersPorts; i++){
+        for (int i = 0; i < numbersPorts; i++) {
             Port port = new Port();
             this.ports.add(port);
         }
 
     }
 
-    public Port getAvailablePort(){
+    public Port getAvailablePort() {
         for (Port port : ports) {
-           if (!port.isConnected())
-               return port;
+            if (!port.isConnected())
+                return port;
         }
         return null;
     }
