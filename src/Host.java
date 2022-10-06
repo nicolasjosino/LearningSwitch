@@ -17,18 +17,21 @@ public class Host extends Thread {
     }
 
     @Override
-    public void run() {
+    synchronized public void run() {
         while (true) {
 
             if (!port.getReceived().isEmpty()) {
-                receiveMessage(port.getReceived().getFirst());
-                port.getReceived().removeFirst();
+                receiveMessage(port.getReceived().remove());
             }
         }
     }
 
     public String getIpAddress() {
         return ipAddress;
+    }
+
+    public HashMap<String, String> getAddressTable() {
+        return addressTable;
     }
 
     public void setIpAddress(String ipAddress) {

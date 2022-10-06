@@ -2,13 +2,13 @@ import java.util.LinkedList;
 
 public class Port {
     private Cable cable;
-    private LinkedList<Packet> received;
-    private LinkedList<Packet> sendList;
+    private final LinkedList<Packet> received;
+    private final LinkedList<Packet> sendList;
     private boolean connected;
 
     public Port() {
         this.cable = null;
-        this.received = new LinkedList<>(); 
+        this.received = new LinkedList<>();
         this.sendList = new LinkedList<>();
         this.connected = false;
     }
@@ -41,7 +41,7 @@ public class Port {
         sendList.add(pack);
         for (Packet packet : sendList) {
             cable.transfer(packet, this);
-            sendList.removeFirst();
+            sendList.remove();
         }
     }
 

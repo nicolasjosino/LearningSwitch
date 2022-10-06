@@ -43,13 +43,12 @@ public class Switch extends Thread {
     }
 
     @Override
-    public void run() {
+    synchronized public void run() {
 
         while (true) {
             for (Port p : ports) {
-                if (!p.getReceived().isEmpty()) {
-                    transmit(p.getReceived().getFirst(), p);
-                    p.getReceived().removeFirst();
+                if (!p.getReceived().isEmpty() && !p.getReceived().contains(null)) {
+                    transmit(p.getReceived().remove(), p);
                 }
             }
         }
