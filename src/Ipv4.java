@@ -60,7 +60,7 @@ public class Ipv4 {
     }
 
     // 3ª Questão
-    public static boolean check_if_ip_belongs_to_network(String netAddress, String ipAddress) {
+    public static boolean IpBelongsToNetwork(String netAddress, String ipAddress) {
         LinkedList<String> listIpAddress;
         long longIpAddress;
 
@@ -89,7 +89,7 @@ public class Ipv4 {
     }
 
     // 4ª Questão
-    public static void checks_if_ip_belongs_to_subnet(LinkedList<String> subnets, String ip) {
+    public static String getLongestPrefix(LinkedList<String> subnets, String ip) {
         String subnetIp;
         String ip32bits;
         String longestPrefix = "";
@@ -101,7 +101,7 @@ public class Ipv4 {
 
         for (String s : subnets) {
 
-            if (check_if_ip_belongs_to_network(s, ip)) {
+            if (IpBelongsToNetwork(s, ip)) {
 
                 subnetIp = s.split("/")[0];
                 mask = Integer.parseInt(s.split("/")[1]);
@@ -128,7 +128,7 @@ public class Ipv4 {
                 }
             }
         }
-        System.out.println("Longest Prefix: " + longestPrefix);
+        return longestPrefix;
     }
 
 

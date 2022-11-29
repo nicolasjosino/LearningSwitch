@@ -2,9 +2,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Switch extends Thread {
-    private final HashMap<String, Port> addressTable;
-    private Integer portsQuantity;
-    private ArrayList<Port> ports;
+    protected final HashMap<String, Port> addressTable;
+    protected Integer portsQuantity;
+    protected ArrayList<Port> ports;
 
     public Switch(Integer portsQuantity) {
         this.addressTable = new HashMap<>();
@@ -14,12 +14,11 @@ public class Switch extends Thread {
         start();
     }
 
-    private void setPorts(Integer numbersPorts) {
+    protected void setPorts(Integer numbersPorts) {
         for (int i = 0; i < numbersPorts; i++) {
             Port port = new Port();
             this.ports.add(port);
         }
-
     }
 
     public Port getAvailablePort() {
@@ -63,7 +62,7 @@ public class Switch extends Thread {
         else broadcast(pack, caller);
     }
 
-    private void broadcast(Packet pack, Port caller) {
+    protected void broadcast(Packet pack, Port caller) {
         for (Port p : ports) {
             if ((p != caller) && (p.isConnected()))
                 p.send(pack);
