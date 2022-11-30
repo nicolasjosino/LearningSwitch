@@ -16,15 +16,14 @@ public class Router extends Switch {
         this.interfaces = new HashMap<>();
     }
 
-    public void addRoute(String netAddress, String ip) {
-        addInterface(ip);
+    public void addRoute(String netAddress, String ip, Port port) {
+        addInterface(port, ip);
         routerTable.put(netAddress, interfaces.get(ip));
     }
 
-    public void addInterface(String ip) {
-        var routerInterface = new RouterInterface(getAvailablePort(), ip);
+    public void addInterface(Port port, String ip) {
+        var routerInterface = new RouterInterface(port, ip);
         interfaces.put(ip, routerInterface);
-        routerInterface.getPort().connect();
     }
 
     public void transmit(Packet pack, Port caller) {
@@ -33,13 +32,15 @@ public class Router extends Switch {
 
         if (ipWithinTable(pack.destinationIp)) {
             if (pack.payload.equals("REQUEST")) {
-                Packet reply = new Packet("REPLY", this.macAddress, "FF:FF:FF", pack.originIp, pack.destinationIp);
+                Packet reply = new Packet("REPLY", this.macAddress, "FF:FF:FF", pack.destinationIp, pack.originIp);
                 caller.send(reply);
             } else {
                 LinkedList<String> netAddressList = new LinkedList<>(routerTable.keySet());
                 String longestPrefix = Ipv4.getLongestPrefix(netAddressList, pack.destinationIp);
-                pack.originMac = this.macAddress;
-                routerTable.get(longestPrefix).getPort().send(pack);
+                if (!longestPrefix.isEmpty()) {
+                    pack.originMac = this.macAddress;
+                    routerTable.get(longestPrefix).getPort().send(pack);
+                }
             }
         }
     }

@@ -2,64 +2,6 @@ import java.util.LinkedList;
 
 public class Ipv4 {
 
-    // 1ª Questão
-    public static void ipRange(String networkAddress) {
-        LinkedList<String> listIp;
-
-        String stringInitIp;
-        String stringFinalIp;
-
-        long longInitIp;
-        long longFinalIp;
-
-        String mask;
-        int quantHosts;
-
-        stringInitIp = networkAddress.split("/")[0];
-        mask = networkAddress.split("/")[1];
-
-        listIp = linkedListIp(stringInitIp);
-        longInitIp = binaryToLong(listIp);
-        quantHosts = getNumberOfHostsAllowed(mask);
-
-        System.out.println("Quantidade de Hosts: " + quantHosts);
-
-        longFinalIp = longInitIp + quantHosts;
-        stringFinalIp = longToIpAddressString(longFinalIp);
-
-        System.out.println("Range: " + stringInitIp + " ~~~ " + stringFinalIp + "\n");
-    }
-
-    // 2ª Questão
-    public static void getSubnetNeeded(String enderecoRede, int n) {
-        LinkedList<String> listIp;
-        LinkedList<String> subnetList = new LinkedList<>();
-
-        listIp = linkedListIp(enderecoRede.split("/")[0]);
-        String mask = enderecoRede.split("/")[1];
-
-        int result = (int) Math.ceil(Math.log(n) / Math.log(2));
-        int quantHosts = getNumberOfHostsAllowed(mask);
-        long longInitIp = binaryToLong(listIp);
-
-        System.out.println("Bits necessarios para " + quantHosts + " hosts: " + result);
-
-        int newSubnet = Integer.parseInt(mask) + result;
-        int numberNewHosts = getNumberOfHostsAllowed(Integer.toString(newSubnet));
-
-        if (n * numberNewHosts <= quantHosts) {
-            System.out.println("Novas Subredes: ");
-
-            for (int i = 0; i < n; i++) {
-                subnetList.add(longToIpAddressString(longInitIp + (i * 32L)) + "/" + newSubnet);
-                System.out.println(subnetList.get(i));
-            }
-        } else {
-            System.out.println("Não há como gerar subredes");
-        }
-    }
-
-    // 3ª Questão
     public static boolean IpBelongsToNetwork(String netAddress, String ipAddress) {
         LinkedList<String> listIpAddress;
         long longIpAddress;
@@ -79,16 +21,9 @@ public class Ipv4 {
         range = getNumberOfHostsAllowed(maskNetAddress);
         longFinalNetAddress = longInitNetAddress + range;
 
-        if ((longIpAddress >= longInitNetAddress) && (longIpAddress <= longFinalNetAddress)) {
-            System.out.println("O IP " + ipAddress + " pertence à rede " + netAddress + ". \n");
-            return true;
-        } else {
-            System.out.println("O IP " + ipAddress + " NAO pertence à rede " + netAddress + ". \n");
-            return false;
-        }
+        return (longIpAddress >= longInitNetAddress) && (longIpAddress <= longFinalNetAddress);
     }
 
-    // 4ª Questão
     public static String getLongestPrefix(LinkedList<String> subnets, String ip) {
         String subnetIp;
         String ip32bits;
@@ -225,17 +160,6 @@ public class Ipv4 {
     }
 
 
-    private static String longToIpAddressString(Long longIp) {
-        String ip = "";
-        ip += ((longIp & 0b11111111000000000000000000000000) >> 24) + ".";
-        ip += ((longIp & 0b111111110000000000000000) >> 16) + ".";
-        ip += ((longIp & 0b1111111100000000) >> 8) + ".";
-        ip += (longIp & 0b11111111);
-
-        return ip;
-    }
-
-
     // Retorna a String de 32bits
     private static String return32BitString(String s) {
         String bit32String;
@@ -247,7 +171,6 @@ public class Ipv4 {
 
         // Retorna uma String de binario em 32bits
         bit32String = getBinaryStringIp(ipLinkedList);
-
 
         return bit32String;
     }
