@@ -42,7 +42,5 @@ public class Main {
         connect(h3, switch2);
 
         h1.sendPacket(h2.getIpAddress(), "hello");
-
-        System.out.println("deu");
     }
 }
