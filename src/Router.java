@@ -32,7 +32,7 @@ public class Router extends Switch {
 
         if (ipWithinTable(pack.destinationIp)) {
             if (pack.payload.equals("REQUEST")) {
-                Packet reply = new Packet("REPLY", this.macAddress, "FF:FF:FF", pack.destinationIp, pack.originIp);
+                Packet reply = new Packet("REPLY", this.macAddress, "FF:FF:FF:FF", pack.destinationIp, pack.originIp);
                 caller.send(reply);
             } else {
                 LinkedList<String> netAddressList = new LinkedList<>(routerTable.keySet());
