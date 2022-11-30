@@ -39,6 +39,8 @@ public class Router extends Switch {
                 String longestPrefix = Ipv4.getLongestPrefix(netAddressList, pack.destinationIp);
                 if (!longestPrefix.isEmpty()) {
                     pack.originMac = this.macAddress;
+                    var destinationMac = arpTable.get(pack.destinationIp);
+                    if (destinationMac != null) pack.destinationMac = "FF:FF:FF:FF";
                     routerTable.get(longestPrefix).getPort().send(pack);
                 }
             }
